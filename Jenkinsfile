@@ -41,12 +41,8 @@ pipeline {
         stage('Linting Dockerfile') {
             steps {
                 script {
-                    try {
-                        sh 'docker run --rm -i hadolint/hadolint:2.10.0 < Dockerfile | tee -a docker_lint.txt'
-                    }
-                    catch (Exception e) {
-                        echo "There are no erros found on Dockerfile!!"
-                    }
+                    sh 'docker run --rm -i hadolint/hadolint:2.10.0 < Dockerfile | tee -a docker_lint.txt'
+                    echo "There are no erros found on Dockerfile!!"
                 }
             }
         }
