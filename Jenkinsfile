@@ -46,11 +46,22 @@ pipeline {
                     }
                     catch (Exception e) {
                         echo "There are no erros found on Dockerfile!!"
-                        echo "111"
                     }
                 }
             }
-        }    
+        }
+
+        stage('Check for Feature Branches') {
+            steps {
+                script {
+                    def branches = checkout([$class: 'GitSCM', branches: [[name: '*/feature']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/ZhannaGuseva/jenkins-multi']]])
+
+                    if (branches.size() > 0) {
+                        echo('Warning: Merging feature branch into master NOT allowed! USE branch protection rules in Git')
+                    }
+                }
+            }
+        }
     }
     post {
         failure {
