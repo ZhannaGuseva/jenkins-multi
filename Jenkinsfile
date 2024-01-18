@@ -37,7 +37,7 @@ pipeline {
                     // Check the message commit for compliance with best practice (first ticket gira code)
 
                     if (!comTitle.matches('^[A-Z]+-[0-9]+.*')) {
-                        error("Commit title does not start with a JIRA ticket code")
+                        error("Commit title does not start with a JIRA ticket code!!!")
                     }
 
                     // Checking the length of the commit header
