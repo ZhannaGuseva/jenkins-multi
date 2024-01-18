@@ -26,9 +26,6 @@ pipeline {
         }
  
         stage('Check Commit Message') {
-            when { 
-                expression { return env.BRANCH_NAME.startsWith('feature') }
-            }
             steps {
                 script {
                     def comMessage = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
