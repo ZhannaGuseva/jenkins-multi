@@ -27,7 +27,7 @@ pipeline {
  
         stage('Check Commit Message') {
             when { 
-                expression { return env.BRANCH_NAME.startsWith('dev') }
+                expression { return env.BRANCH_NAME.startsWith('feature') }
             }
             steps {
                 script {
