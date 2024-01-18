@@ -1,3 +1,13 @@
+void setBuildStatus(String message, String state) {
+  step([
+      $class: "GitHubCommitStatusSetter",
+      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/ZhannaGuseva/jenkins-multi"],
+      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
+  ]);
+}
+
 pipeline {
     agent {
         label 'built-in'
@@ -46,29 +56,14 @@ pipeline {
                 }
             }
         }
-
-        stage('Check for Feature Branches') {
-            steps {
-                script {
-                    def branches = checkout([$class: 'GitSCM', branches: [[name: '*/feature']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/ZhannaGuseva/jenkins-multi']]])
-
-                    if (branches.size() > 0) {
-                        echo('Warning: Merging feature branch into master NOT allowed! USE branch protection rules in Git')
-                    }
-                }
-            }
-        }
     }
+    
     post {
         failure {
-            script {
-                echo 'Pipeline FAILED '
-            }
+            setBuildStatus("Build failed", "FAILURE");
         }
         success {
-            script {
-                echo 'Pipeline execution was Successful'
-            }
+            setBuildStatus("Build succeeded", "SUCCESS");
         }
         always {
             archiveArtifacts 'docker_lint.txt'
